@@ -31,19 +31,19 @@ void quick_sort_hoare(int *array, size_t size)
  * partition_sort_hoare - function of partition.
  *@array: given array to be sorted.
  *@size: size of array to be sorted.
- *@end: partition.
- *@start: partition.
+ *@low: partition.
+ *@high: partition.
  * Return: void.
  */
-void partition_sort_hoare(int *array, size_t size, int end, int start)
+void partition_sort_hoare(int *array, size_t size, int low, int high)
 {
 	int part;
 
-	if (start - end > 0)
+	if (high - low > 0)
 	{
-		part = partition_hoare(array, size, end, start);
-		partition_sort_hoare(array, size, end, part - 1);
-		partition_sort_hoare(array, size, part, start);
+		part = partition_hoare(array, size, low, high);
+		partition_sort_hoare(array, size, low, part - 1);
+		partition_sort_hoare(array, size, part, high);
 	}
 }
 
