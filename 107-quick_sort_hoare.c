@@ -31,19 +31,19 @@ void quick_sort_hoare(int *array, size_t size)
  * partition_sort_hoare - function of partition.
  *@array: given array to be sorted.
  *@size: size of array to be sorted.
- *@low: partition.
- *@high: partition.
+ *@end: partition.
+ *@start: partition.
  * Return: void.
  */
-void partition_sort_hoare(int *array, size_t size, int low, int high)
+void partition_sort_hoare(int *array, size_t size, int end, int start)
 {
 	int part;
 
-	if (high - low > 0)
+	if (start - end > 0)
 	{
-		part = partition_hoare(array, size, low, high);
-		partition_sort_hoare(array, size, low, part - 1);
-		partition_sort_hoare(array, size, part, high);
+		part = partition_hoare(array, size, end, start);
+		partition_sort_hoare(array, size, end, part - 1);
+		partition_sort_hoare(array, size, part, start);
 	}
 }
 
@@ -58,24 +58,23 @@ void partition_sort_hoare(int *array, size_t size, int low, int high)
 int partition_hoare(int *array, size_t size, int low, int high)
 {
 	int pivot = array[high];
-	int left = low;
-	int right = high;
+	int left = low - 1;
+	int right = high + 1;
 
-	while (true)
+	while (1)
 	{
-		while (array[left] < pivot)
+		do {
 			left++;
+		} while (array[left] < pivot);
 
-		while (array[right] > pivot)
+		do {
 			right--;
+		} while (array[right] > pivot);
 
 		if (left >= right)
 			return (right);
 
 		swap_bubble(array + left, array + right);
 		print_array(array, size);
-
-		left++;
-		right--;
 	}
 }
