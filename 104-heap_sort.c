@@ -1,67 +1,68 @@
 #include "sort.h"
-
 /**
- * swap_bubble - function for sorting with swap method.
- *@a: element to be swapped.
- *@b: element to be swapped.
- * Return: nothing.
- */
-
-void swap_bubble(int *a, int *b)
-{
-	int temp;
-
-	temp = *a;
-	*a = *b;
-	*b = temp;
-}
-/**
- * max_heap - Turn a binary tree into heap.
- * @array: An array representing a binary tree.
- * @size: The size of the array/tree.
- * @bse: The indx of the baseof the tree.
- * @rt: The root  binary tree.
- */
-void max_heap(int *array, size_t size, size_t bse, size_t rt)
-{
-	size_t left = 2 * rt + 1;
-	size_t right = 2 * rt + 2;
-	size_t big = rt;
-
-	if (left < bse && array[left] > array[big])
-		big = left;
-	if (right < bse && array[right] > array[big])
-		big = right;
-
-	if (big != rt)
-	{
-		swap_bubble(array + rt, array + big);
-		print_array(array, size);
-		max_heap(array, size, bse, big);
-	}
-}
-/**
- * heap_sort - Sort an array of integers in ascending
- *             order.
- * @array: An array of integers.
- * @size: The size of the array.
+ * check_tree - swiftdown check
+ * @array: pointer to array
+ * @size: size of the pointer
+ * @size_init: original size of the array
+ * @idx: index as a root of the tree
  *
- * Description: Prints the array after each swap.
- */
+**/
+void check_tree(int *array, size_t size_init, size_t size, size_t idx)
+{
+
+	int n, brch1, brch2;
+	size_t br1, br2;
+
+	br1 = idx * 2 + 1;
+	br2 = br1 + 1;
+	brch1 = array[br1];
+	brch2 = array[br2];
+	if (((br1 < size) && (br2 < size) &&
+		(brch1 >= brch2 && brch1 > array[idx]))
+		|| ((br1 == size - 1) && brch1 > array[idx]))
+	{
+		n = array[idx];
+		array[idx] = brch1;
+		array[br1] = n;
+		print_array(array, size_init);
+	}
+	else if ((br1 < size) && (br2 < size) &&
+		(brch2 > brch1 && brch2 > array[idx]))
+	{
+		n = array[idx];
+		array[idx] = brch2;
+		array[br2] = n;
+		print_array(array, size_init);
+	}
+	if (br1 < size - 1)
+		check_tree(array, size_init, size, br1);
+	if (br2 < size - 1)
+		check_tree(array, size_init, size, br2);
+}
+/**
+ * heap_sort - sorts an array of integers
+ * @array: pointer to array
+ * @size: size of the pointer
+ *
+**/
 void heap_sort(int *array, size_t size)
 {
-	int k;
+	size_t idx, size_init = size;
+	int n;
 
-	if (array == NULL || size < 2)
+	if (!array)
 		return;
-
-	for (k = (size / 2) - 1; k >= 0; k--)
-		max_heap(array, size, size, k);
-
-	for (k = size - 1; k > 0; k--)
+	for (idx = 0; idx < size / 2 ; idx++)
 	{
-		swap_bubble(array, array + k);
-		print_array(array, size);
-		max_heap(array, size, k, 0);
+		check_tree(array, size_init, size, size / 2 - 1 - idx);
 	}
+	for (idx = 0; idx < size_init - 1; idx++)
+	{
+		n = array[0];
+		array[0] = array[size - 1 - idx];
+		array[size - 1 - idx] = n;
+		print_array(array, size_init);
+		check_tree(array, size_init, size - idx - 1, 0);
+	}
+
 }
